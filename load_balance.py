@@ -52,7 +52,7 @@ if __name__ == '__main__':
     servers = [[]]
     while len(servers) >= 1:
         servers = tick(servers)
-        new_users = int(input('Digite quantos novos usuários estão conectando no sistema: '))
-        servers = distribute_users(new_users, servers, umax, ttask)
+        new_users = input('Digite quantos novos usuários estão conectando no sistema: ')
+        servers = distribute_users(int(new_users) if new_users.isdigit() else 0, servers, umax, ttask)
         print(show_servers())
     print(cost_total)
