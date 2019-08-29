@@ -1,63 +1,58 @@
 # encoding: utf-8
-import random
 
 cost_total = 0
-servers = []
 
-def validation_input(ttask, task):
+
+def validate_input(input_):
     """ Checks input """
-    return 1
+    return input_ if input_.isdigit() and 1 <= int(input_) <= 10 else validate_input(input('Entrada inválida, digite novamente: '))
 
 
 def show_servers():
+    """ Show all servers with users and sum tick costs """
     global cost_total
     cost_total += len(servers)
-    return ','.join(str(len(server)) for server in servers)
+    return ','.join(str(len(server)) for server in servers) if servers else 0
 
 
-def tick():
-    """ Process task for server, for user """
-    global servers
+def tick(servers_):
+    """ Process all process in tick time for servers """
 
-    for i in range(len(servers)):
-        servers[i] = list(filter(lambda a: a>=1,list(map(lambda x: x-1, servers[i]))))
+    for i in range(len(servers_)):
+        servers_[i] = list(filter(lambda process: process >= 1, list(map(lambda task: task - 1, servers_[i]))))
 
-    servers = list(filter(lambda lenght: len(lenght)>=1,servers))
-
+    return list(filter(lambda server: len(server) >= 1, servers_))
 
 
-
-
-def alocate_user(new_users_):
-    for server in servers:
-        if len(server)<umax:
-            if new_users_ >= umax-len(server):
-                for i in range(umax-len(server)):
-                    server.append(ttask)
+def distribute_users(new_users_, servers_, umax_, ttask_):
+    """ Distribute all new users to servers """
+    for server in servers_:
+        if len(server) < umax_:
+            if new_users_ >= umax_-len(server):
+                for i in range(umax_-len(server)):
+                    server.append(ttask_)
                     new_users_ -= 1
 
             else:
                 for i in range(new_users_):
-                    server.append(ttask)
+                    server.append(ttask_)
                     new_users_ -= 1
 
+    if new_users_ >= 1:
+        servers_.append([])
+        distribute_users(new_users_, servers_, umax_, ttask_)
 
-
-    if new_users_>=1:
-        servers.append([])
-        alocate_user(new_users_)
-
-    return servers
+    return servers_
 
 if __name__ == '__main__':
 
-    ttask = int(input('Digite o número de ticks que cada tarefa leva para executar: '))
-    umax = int(input('Digite quantos usuários simultâneos cada servidor suporta: '))
+    ttask = int(validate_input(input('Digite o número de ticks que cada tarefa leva para executar: ')))
+    umax = int(validate_input(input('Digite quantos usuários simultâneos cada servidor suporta: ')))
 
     servers = [[]]
     while len(servers) >= 1:
-        tick()
+        servers = tick(servers)
         new_users = int(input('Digite quantos novos usuários estão conectando no sistema: '))
-        servers = alocate_user(new_users)
+        servers = distribute_users(new_users, servers, umax, ttask)
         print(show_servers())
     print(cost_total)
