@@ -16,7 +16,7 @@ def show_servers():
 
 
 def tick(servers_):
-    """ Process all process in tick time for servers """
+    """ Process all tasks in servers """
 
     for i in range(len(servers_)):
         servers_[i] = list(filter(lambda process: process >= 1, list(map(lambda task: task - 1, servers_[i]))))
@@ -43,6 +43,7 @@ def distribute_users(new_users_, servers_, umax_, ttask_):
         distribute_users(new_users_, servers_, umax_, ttask_)
 
     return servers_
+
 
 if __name__ == '__main__':
 
