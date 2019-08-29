@@ -7,6 +7,24 @@ class TestLoadBalancer(unittest.TestCase):
         self.umax = 2
         self.servers = [[]]
 
+    def test_distribute_users_1(self):
+        self.assertEqual([[2, 2], [2, 2], [2]], distribute_users(5, self.servers, 2, 2))
+
+    def test_distribute_users_2(self):
+        self.assertEqual([[2, 2, 2], [2, 2]], distribute_users(5, self.servers, 3, 2))
+
+    def test_distribute_users_3(self):
+        self.assertEqual([[1, 1, 1, 1, 1], [1]], distribute_users(6, self.servers, 5, 1))
+
+    def test_tick_1(self):
+        self.assertEqual([[1, 2], [1, 1, 1], [3]], tick([[2, 3], [2, 2, 2], [4]]))
+
+    def test_tick_2(self):
+        self.assertEqual([[1], [2]], tick([[1, 2], [1, 1, 1], [3]]))
+
+    def test_tick_3(self):
+        self.assertEqual([], tick([[1], [1]]))
+
     def test_iteration_1(self):
         self.assertEqual([[4]], distribute_users(1, tick(self.servers), self.umax, self.ttask))
 
